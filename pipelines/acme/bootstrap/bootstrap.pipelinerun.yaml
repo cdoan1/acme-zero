@@ -6,12 +6,13 @@ metadata:
 spec:
   pipelineRef:
     name: bootstrap-pipeline
-  serviceAccountName: bootstrap-pipeline-sa
   params:
     - name: git-url
       value: "https://github.com/cdoan1/acme-zero"
     - name: git-revision
       value: "main"
+  taskRunTemplate:
+    serviceAccountName: bootstrap-pipeline-sa
   workspaces:
     - name: shared-workspace
       volumeClaimTemplate:
