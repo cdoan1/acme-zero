@@ -17,9 +17,29 @@ spec:
     - name: shared-workspace
   tasks:
     - name: clone-repository
-      taskRef:
-        name: git-clone
-        kind: ClusterTask
+      taskSpec:
+        params:
+          - name: url
+          - name: revision
+        workspaces:
+          - name: output
+        steps:
+          - name: clone
+            image: registry.redhat.io/ubi9/ubi:latest
+            workingDir: $(workspaces.output.path)
+            script: |
+              #!/usr/bin/env bash
+              set -e
+              
+              # Install git
+              dnf install -y git
+              
+              # Clone the repository
+              git clone $(params.url) .
+              git checkout $(params.revision)
+              
+              echo "Repository cloned successfully"
+              ls -la
       workspaces:
         - name: output
           workspace: shared-workspace

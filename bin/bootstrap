@@ -46,6 +46,3 @@ echo "Setting up Vault-based secret management for provisioned cluster namespace
 echo "Note: ExternalSecrets will be created but won't sync until clusters are fully provisioned"
 echo "Skipping Vault setup for now"
 # ./bin/bootstrap-vault
-
-# echo "Boostrap the pipeline task to run the bootstrap script on the ACME cluster"
-# oc apply -k ./pipelines/acme/bootstrap
