@@ -31,7 +31,11 @@ echo "Waiting for regional clusters to provision"
 # Note: Cluster provisioning is handled by GitOps - clusters will be created automatically
 # Wait times depend on cluster type: EKS (~15min), OCP via Hive (~45min), HCP (~10min)
 
-echo "GitOps has begun cluster provisioning. You can monitor progress with:"
+echo "GitOps has begun cluster provisioning. Current GitOps status:"
+oc get applications -n openshift-gitops
+
+echo ""
+echo "You can monitor progress with:"
 echo "  oc get applications -n openshift-gitops"
 echo "  oc get clusterdeployments -A  # For OCP clusters"
 echo "  oc get clusters -A            # For EKS clusters" 
@@ -40,4 +44,5 @@ echo ""
 
 echo "Setting up Vault-based secret management for provisioned cluster namespaces"
 echo "Note: ExternalSecrets will be created but won't sync until clusters are fully provisioned"
-./bin/bootstrap-vault
+echo "Skipping Vault setup for now"
+# ./bin/bootstrap-vault
