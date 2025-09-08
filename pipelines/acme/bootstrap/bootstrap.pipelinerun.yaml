@@ -4,7 +4,7 @@ metadata:
   name: bootstrap-run
   namespace: bootstrap
   annotations:
-    tekton.dev/periodic: "*/2 * * * *"  # Every 2 minutes
+    tekton.dev/periodic: "*/10 * * * *"  # Every 10 minutes
 spec:
   pipelineRef:
     name: bootstrap-pipeline
