@@ -1,0 +1,11 @@
+kind: Kustomization
+
+namespace: openshift-gitops
+
+resources:
+- ./namespace.yaml
+- ./openshift-pipelines-operator.application.yaml
+- ./cluster-provisioning-metrics.application.yaml # monitors cluster provisioning
+- ./vault.application.yaml
+- ./eso.application.yaml
+- ./gitea.application.yaml

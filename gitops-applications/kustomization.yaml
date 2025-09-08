@@ -1,0 +1,31 @@
+kind: Kustomization
+
+namespace: openshift-gitops
+
+resources:
+# Global applications (base cluster infrastructure)
+- ./global/
+
+# ADD CLUSTERS HERE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
