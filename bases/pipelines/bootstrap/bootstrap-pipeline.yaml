@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: bootstrap-pipeline
+spec:
+  description: >-
+    A pipeline to run the boostrap script on the ACME cluster.
+    Shows the details of the git revision that triggered it.
+  params:
+    - name: message
+      type: string
+  tasks:
+    - name: bootstrap-task
+      taskSpec:
+        params:
+          - name: message
+        steps:
+          - name: say-hello
+            image: registry.redhat.io/ubi9-minimal
+            script: |
+              #!/usr/bin/env bash
+              set -e
+
+              echo "Hello World! 🌍"
+              echo "$(params.message)"
+      params:
+        - name: message
+          value: "hello world"

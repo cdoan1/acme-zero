@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: bootstrap-run
+  namespace: bootstrap
+spec:
+  pipelineRef:
+    name: bootstrap-pipeline
+  params:
+    - name: cluster-name
+      value: acme
+    - name: region
+      value: us-west-2
