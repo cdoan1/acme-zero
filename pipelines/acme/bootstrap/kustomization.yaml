@@ -8,6 +8,7 @@ commonAnnotations:
   version: "v0.0.1"
 
 resources:
+  - namespace.yaml
   - bootstrap.pipelinerun.yaml
 
 components:

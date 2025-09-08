@@ -4,25 +4,53 @@ metadata:
   name: bootstrap-pipeline
 spec:
   description: >-
-    A pipeline to run the boostrap script on the ACME cluster.
-    Shows the details of the git revision that triggered it.
+    A pipeline to run the bootstrap script on the ACME cluster.
+    Clones the git repository and executes bin/bootstrap.
   params:
-    - name: message
+    - name: git-url
       type: string
+      default: "https://github.com/cdoan1/acme-zero"
+    - name: git-revision
+      type: string
+      default: "main"
+  workspaces:
+    - name: shared-workspace
   tasks:
+    - name: clone-repository
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
     - name: bootstrap-task
+      runAfter:
+        - clone-repository
       taskSpec:
-        params:
-          - name: message
+        workspaces:
+          - name: source
         steps:
-          - name: say-hello
-            image: registry.redhat.io/ubi9-minimal
+          - name: run-bootstrap
+            image: registry.redhat.io/ubi9/ubi:latest
+            workingDir: $(workspaces.source.path)
             script: |
               #!/usr/bin/env bash
               set -e
-
-              echo "Hello World! 🌍"
-              echo "$(params.message)"
-      params:
-        - name: message
-          value: "hello world"
+              
+              # Install oc CLI
+              curl -L https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz | tar -xz -C /usr/local/bin/
+              
+              # Make bootstrap script executable
+              chmod +x ./bin/bootstrap
+              
+              # Run the bootstrap script
+              echo "Running bootstrap script..."
+              ./bin/bootstrap
+      workspaces:
+        - name: source
+          workspace: shared-workspace

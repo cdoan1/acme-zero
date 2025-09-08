@@ -6,8 +6,18 @@ metadata:
 spec:
   pipelineRef:
     name: bootstrap-pipeline
+  serviceAccountName: bootstrap-pipeline-sa
   params:
-    - name: cluster-name
-      value: acme
-    - name: region
-      value: us-west-2
+    - name: git-url
+      value: "https://github.com/cdoan1/acme-zero"
+    - name: git-revision
+      value: "main"
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi

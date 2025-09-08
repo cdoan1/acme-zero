@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bootstrap-pipeline-sa
+  namespace: bootstrap
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: bootstrap-pipeline-role
+rules:
+# Allow applying kustomizations and resources
+- apiGroups: [""]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["apps"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["argoproj.io"]
+  resources: ["applications"]
+  verbs: ["*"]
+- apiGroups: ["operators.coreos.com"]
+  resources: ["subscriptions", "operatorgroups", "clusterserviceversions"]
+  verbs: ["*"]
+- apiGroups: ["route.openshift.io"]
+  resources: ["routes"]
+  verbs: ["*"]
+- apiGroups: ["config.openshift.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["console.openshift.io"]
+  resources: ["*"]
+  verbs: ["*"]
+# Allow reading cluster info
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: bootstrap-pipeline-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: bootstrap-pipeline-role
+subjects:
+- kind: ServiceAccount
+  name: bootstrap-pipeline-sa
+  namespace: bootstrap
