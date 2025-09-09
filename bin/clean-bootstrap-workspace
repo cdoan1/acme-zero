@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Script to clean the bootstrap workspace PVC for a fresh start
+
+set -e
+
+echo "Cleaning bootstrap workspace..."
+
+# Check if logged into cluster
+if ! oc whoami &>/dev/null; then
+    echo "Error: Not logged into OpenShift cluster. Run 'oc login' first."
+    exit 1
+fi
+
+# Stop any running pipeline runs using the PVC
+echo "Checking for running PipelineRuns..."
+RUNNING_RUNS=$(oc get pipelineruns -n bootstrap --no-headers | grep -v "Succeeded\|Failed" | wc -l)
+if [ "$RUNNING_RUNS" -gt 0 ]; then
+    echo "Warning: Found $RUNNING_RUNS running PipelineRuns. Stopping them..."
+    oc delete pipelineruns -n bootstrap --field-selector=status.phase=Running
+    echo "Waiting for PipelineRuns to terminate..."
+    sleep 10
+fi
+
+# Delete the PVC if it exists
+if oc get pvc bootstrap-workspace-pvc -n bootstrap &>/dev/null; then
+    echo "Deleting PVC bootstrap-workspace-pvc..."
+    oc delete pvc bootstrap-workspace-pvc -n bootstrap
+    echo "PVC deleted successfully"
+else
+    echo "PVC bootstrap-workspace-pvc not found, nothing to delete"
+fi
+
+# Recreate the PVC
+echo "Recreating PVC..."
+oc apply -k ./bases/pipelines/bootstrap/ -n bootstrap
+
+echo "Bootstrap workspace cleaned and recreated successfully!"
+echo "You can now run a fresh bootstrap pipeline."
