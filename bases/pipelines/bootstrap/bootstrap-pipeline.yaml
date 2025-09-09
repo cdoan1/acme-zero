@@ -17,33 +17,15 @@ spec:
     - name: shared-workspace
   tasks:
     - name: clone-repository
-      taskSpec:
-        params:
-          - name: url
-          - name: revision
-        workspaces:
-          - name: output
-        steps:
-          - name: clone
-            image: alpine/git:latest
-            workingDir: $(workspaces.output.path)
-            script: |
-              #!/bin/sh
-              set -e
-              
-              # Clone the repository
-              git clone $(params.url) .
-              git checkout $(params.revision)
-              
-              echo "Repository cloned successfully"
-              ls -la
+      taskRef:
+        name: git-clone
       workspaces:
         - name: output
           workspace: shared-workspace
       params:
-        - name: url
+        - name: URL
           value: $(params.git-url)
-        - name: revision
+        - name: REVISION
           value: $(params.git-revision)
     - name: bootstrap-task
       runAfter:
@@ -62,9 +44,27 @@ spec:
               # oc CLI is already available in this image
               
               # Make bootstrap script executable
-              chmod +x ./bin/bootstrap
+              # chmod +x ./bin/bootstrap
               
               # Run the bootstrap script
+              ls -al
+              pwd
+
+
+              # test storage; create inline file
+              echo > inline-file.txt << EOF
+              This is an inline file
+              This is an inline file
+              This is an inline file
+              EOF
+              
+              ls -al
+              cat inline-file.txt
+
+              which git
+              git --version
+
+
               echo "Running bootstrap script..."
               ./bin/bootstrap
       workspaces:
