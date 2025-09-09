@@ -10,7 +10,7 @@ spec:
     name: bootstrap-pipeline
   params:
     - name: git-url
-      value: "https://github.com/cdoan1/acme-zero"
+      value: "https://github.com/cdoan1/acme-zero.git"
     - name: git-revision
       value: "main"
   taskRunTemplate:

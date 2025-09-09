@@ -9,7 +9,7 @@ spec:
   params:
     - name: git-url
       type: string
-      default: "https://github.com/cdoan1/acme-zero"
+      default: "https://github.com/cdoan1/acme-zero.git"
     - name: git-revision
       type: string
       default: "main"
