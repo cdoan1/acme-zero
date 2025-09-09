@@ -61,10 +61,6 @@ spec:
               ls -al
               cat inline-file.txt
 
-              which git
-              git --version
-
-
               echo "Running bootstrap script..."
               ./bin/bootstrap
       workspaces:
