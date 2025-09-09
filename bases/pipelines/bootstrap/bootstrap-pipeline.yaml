@@ -25,16 +25,11 @@ spec:
           - name: output
         steps:
           - name: clone
-            image: registry.redhat.io/ubi9/ubi:latest
+            image: alpine/git:latest
             workingDir: $(workspaces.output.path)
-            securityContext:
-              runAsUser: 0  # Run as root to install packages
             script: |
-              #!/usr/bin/env bash
+              #!/bin/sh
               set -e
-              
-              # Install git
-              dnf install -y git
               
               # Clone the repository
               git clone $(params.url) .
@@ -58,16 +53,13 @@ spec:
           - name: source
         steps:
           - name: run-bootstrap
-            image: registry.redhat.io/ubi9/ubi:latest
+            image: quay.io/openshift/origin-cli:latest
             workingDir: $(workspaces.source.path)
-            securityContext:
-              runAsUser: 0  # Run as root to install packages
             script: |
-              #!/usr/bin/env bash
+              #!/bin/bash
               set -e
               
-              # Install oc CLI
-              curl -L https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz | tar -xz -C /usr/local/bin/
+              # oc CLI is already available in this image
               
               # Make bootstrap script executable
               chmod +x ./bin/bootstrap
