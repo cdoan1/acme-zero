@@ -3,12 +3,10 @@ kind: Component
 
 namespace: bootstrap
 
-annotations:
-  cluster: acme
-  version: "v0.0.1"
-
 resources:
   - namespace.yaml
+  - sa.yaml
   - rbac.yaml
   - pvc.yaml
   - bootstrap-pipeline.yaml
+  - pipeline-run.yaml

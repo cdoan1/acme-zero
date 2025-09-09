@@ -1,12 +1,4 @@
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  namespace: bootstrap
-  name: bootstrap-pipeline-sa
-# secrets:
-
----
 apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
@@ -32,9 +24,9 @@ spec:
         - name: output
           workspace: shared-workspace
       params:
-        - name: URL
+        - name: url
           value: $(params.git-url)
-        - name: REVISION
+        - name: revision
           value: $(params.git-revision)
     - name: bootstrap-task
       runAfter:
@@ -75,26 +67,3 @@ spec:
       workspaces:
         - name: source
           workspace: shared-workspace
-
----
-apiVersion: tekton.dev/v1
-kind: PipelineRun
-metadata:
-  # name: bootstrap-run
-  generateName: bootstrap-run-
-  namespace: bootstrap
-spec:
-  serviceAccountName: bootstrap-pipeline-sa
-  params:
-    - name: git-url
-      value: "https://github.com/cdoan1/acme-zero.git"
-    - name: git-revision
-      value: "main"
-  pipelineRef:
-    name: bootstrap-pipeline
-  taskRunTemplate:
-    serviceAccountName: bootstrap-pipeline-sa
-  workspaces:
-    - name: shared-workspace
-      persistentVolumeClaim:
-        claimName: bootstrap-workspace-pvc
