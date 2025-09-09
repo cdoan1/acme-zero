@@ -4,3 +4,4 @@ kind: Component
 resources:
   - bootstrap-pipeline.yaml
   - rbac.yaml
+  - pvc.yaml

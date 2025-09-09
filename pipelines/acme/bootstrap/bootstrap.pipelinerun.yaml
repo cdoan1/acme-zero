@@ -17,10 +17,5 @@ spec:
     serviceAccountName: bootstrap-pipeline-sa
   workspaces:
     - name: shared-workspace
-      volumeClaimTemplate:
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 1Gi
+      persistentVolumeClaim:
+        claimName: bootstrap-workspace-pvc
